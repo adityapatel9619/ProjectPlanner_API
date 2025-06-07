@@ -1,6 +1,7 @@
 using ProjectPlanner_API;
 using ProjectPlanner_API.IMethod;
 using ProjectPlanner_API.Repository;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,13 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+Log.Logger = new LoggerConfiguration().
+            WriteTo.File("Logs/log_.txt", rollingInterval: RollingInterval.Day)
+            .Enrich.FromLogContext()
+            .CreateLogger();
+
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 

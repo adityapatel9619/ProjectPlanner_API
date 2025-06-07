@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjectPlanner_API.IMethod;
 using ProjectPlanner_API.Models;
+using Microsoft.Extensions.Logging;
 
 namespace ProjectPlanner_API.Controllers
 {
@@ -10,10 +11,12 @@ namespace ProjectPlanner_API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccount _account;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(IAccount account)
+        public AccountController(IAccount account,ILogger<AccountController> logger)
         {
             _account = account;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -59,6 +62,7 @@ namespace ProjectPlanner_API.Controllers
             catch (Exception ex)
             {
                 message = "Something Went Wrong !!!!";
+                _logger.LogError(ex.Message.ToString());
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message });
             }
         }
