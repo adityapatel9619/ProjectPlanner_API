@@ -30,7 +30,7 @@ namespace ProjectPlanner_API.Controllers
                 {
                     List<RegistrationModel> listModel = new List<RegistrationModel>();
 
-                    listModel = _account.ValidateUsername(registration.UserName);
+                    listModel = await _account.ValidateUsername(registration.UserName);
 
                     if (listModel.Count > 0)
                     {

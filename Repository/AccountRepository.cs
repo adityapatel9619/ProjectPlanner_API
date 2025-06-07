@@ -21,7 +21,7 @@ namespace ProjectPlanner_API.Repository
         /// </summary>
         /// <param name="username">adityapatel777</param>
         /// <returns></returns>
-        public List<RegistrationModel> ValidateUsername(string username)
+        public async Task<List<RegistrationModel>> ValidateUsername(string username)
         {
             try
             {
@@ -33,11 +33,11 @@ namespace ProjectPlanner_API.Repository
                     validate.CommandType = CommandType.StoredProcedure;
                     validate.Parameters.Add("@sUsername", SqlDbType.VarChar, 200).Value = username;
 
-                    conn.Open();
+                    await conn.OpenAsync();
 
-                    SqlDataReader reader = validate.ExecuteReader();
+                    SqlDataReader reader = await validate.ExecuteReaderAsync();
 
-                    while (reader.Read())
+                    while (await reader.ReadAsync())
                     {
                         RegistrationModel usernamedetail = new RegistrationModel()
                         {
