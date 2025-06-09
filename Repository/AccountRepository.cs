@@ -16,6 +16,7 @@ namespace ProjectPlanner_API.Repository
             _connectionstring = connectionStringProvider.GetConnection;
         }
 
+
         /// <summary>
         /// Validate username 
         /// </summary>
@@ -53,6 +54,39 @@ namespace ProjectPlanner_API.Repository
                 }
 
                 return usernameList;                
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<List<DepartmentModel>> GetDepartments()
+        {
+            try
+            {
+                var departments = new List<DepartmentModel>();
+
+                using (SqlConnection conn = new SqlConnection(_connectionstring))
+                {
+                    SqlCommand cmd = new SqlCommand("PP_Department_GET_API", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    await conn.OpenAsync();
+
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            departments.Add(new DepartmentModel
+                            {
+                                nId = Convert.ToInt32(reader["nID"]),
+                                sDeptName = reader["sDeptName"].ToString()
+                            });
+                        }
+                    }
+                    return departments;
+                }
             }
             catch (Exception)
             {

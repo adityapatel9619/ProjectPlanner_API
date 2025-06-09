@@ -66,5 +66,28 @@ namespace ProjectPlanner_API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message });
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> BindDepartments()
+        {
+            try
+            {
+                var depts = await _account.GetDepartments();
+
+                if (depts != null)
+                {
+                    return Ok(depts);
+                }
+                else
+                {
+                    return NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }
