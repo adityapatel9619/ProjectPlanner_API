@@ -6,5 +6,6 @@ namespace ProjectPlanner_API.IMethod
     {
         Task<List<RegistrationModel>> ValidateUsername(string username);
         Task<List<DepartmentModel>> GetDepartments();
+        Task<NewEmployeeModel> SaveNewEmployee(NewEmployeeModel model);
     }
 }

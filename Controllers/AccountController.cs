@@ -89,5 +89,59 @@ namespace ProjectPlanner_API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpPost]
+        [ActionName("AddNewEmployee")]
+        public async Task<ActionResult> SaveNewEmployee([FromBody]NewEmployeeModel model)
+        {
+            string message = string.Empty;
+            try
+            {
+                if (model == null)
+                {
+                    message = "Data is Invalid";
+                    _logger.LogWarning("Data is Invalid");
+                    return StatusCode(StatusCodes.Status400BadRequest, new
+                    {
+                        message,
+                        isError = false,
+                        data = model
+                    });
+                }
+                else
+                {
+                    NewEmployeeModel savedData = new NewEmployeeModel();
+                     savedData =  await _account.SaveNewEmployee(model);
+
+                    if (savedData != null)
+                    {
+                        message = "New Employee Registered";
+                        return StatusCode(StatusCodes.Status201Created, new
+                        {
+                            message,
+                            isError = false,
+                            data = model
+                        });
+                    }
+                    else
+                    {
+                        message = "Error during Registration";
+                        return StatusCode(StatusCodes.Status400BadRequest, new
+                        {
+                            message,
+                            isError = true,
+                            data = model
+                        });
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                message = "Something Went Wrong !!!!";
+                _logger.LogError(ex.Message.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message });
+            }
+        }
     }
 }

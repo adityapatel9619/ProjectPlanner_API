@@ -62,6 +62,10 @@ namespace ProjectPlanner_API.Repository
             }
         }
 
+        /// <summary>
+        /// Get Department List
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<DepartmentModel>> GetDepartments()
         {
             try
@@ -87,6 +91,42 @@ namespace ProjectPlanner_API.Repository
                     }
                     return departments;
                 }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Register New Employee In System
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<NewEmployeeModel> SaveNewEmployee(NewEmployeeModel model)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionstring))
+                {
+                    SqlCommand save = new SqlCommand("PP_NewEmployee_Register_INSERT", conn);
+                    save.CommandType = CommandType.StoredProcedure;
+                    save.Parameters.Add("@sName", SqlDbType.VarChar, 100).Value = model.sName;
+                    save.Parameters.Add("@sEmail", SqlDbType.VarChar, 100).Value = model.sEmail;
+                    save.Parameters.Add("@sPhone", SqlDbType.VarChar,12).Value = model.sPhone;
+                    save.Parameters.Add("@nDept", SqlDbType.Int).Value = Convert.ToInt32(model.nDept);
+
+                    await conn.OpenAsync();
+
+                    SqlDataReader reader = await save.ExecuteReaderAsync();
+
+                    reader.Close();
+                    conn.Close();
+                }
+
+                return model;
             }
             catch (Exception)
             {
